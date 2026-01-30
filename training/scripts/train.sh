@@ -1,0 +1,22 @@
+torchrun \
+  --nnodes=1 \
+  --node_rank=0 \
+  --nproc_per_node=8 \
+  --master_addr="your_ip" \
+  --master_port=your_port \
+  ./train/pretrain_unified_navit.py \
+  --dataset_config_file ./data/configs/example.yaml \
+  --model_path your_path \
+  --layer_module Qwen2MoTDecoderLayer \
+  --max_latent_size 64 \
+  --resume_from your_path \
+  --cpu_offload False \
+  --finetune_from_hf True \
+  --auto_resume False \
+  --resume_model_only False \
+  --finetune_from_ema False \
+  --visual_gen True \
+  --visual_und True \
+  --log_every 1 \
+  --lr 3e-5 \
+  --warmup_steps 2000 \
