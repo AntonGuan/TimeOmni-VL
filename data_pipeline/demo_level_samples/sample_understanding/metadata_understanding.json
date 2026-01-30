@@ -1,0 +1,33 @@
+{
+  "mode": "full_sequence",
+  "freq": "6H",
+  "total_len": 136,
+  "pad_left": 0,
+  "pad_right": 0,
+  "periodicity": 4,
+  "scale_x": 0.03794642857142857,
+  "means": [
+    [
+      5.595290713245049e-05
+    ]
+  ],
+  "stdev": [
+    [
+      1.7673708498477936e-05
+    ]
+  ],
+  "norm_const": 0.4,
+  "image_size": 896,
+  "patch_size": 16,
+  "num_patch": 56,
+  "exact_width": 896,
+  "nvars": 1,
+  "pad_down": 0,
+  "pad_right_img": 0,
+  "color_list": [
+    0
+  ],
+  "image_size_per_var": 896,
+  "padding_mode": "replicate",
+  "color_mode": true
+}

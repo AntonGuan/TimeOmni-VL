@@ -1,0 +1,61 @@
+{
+  "mode": "imputation",
+  "freq": "5T",
+  "total_len": 1728,
+  "pad_left": 0,
+  "pad_right": 0,
+  "periodicity": 288,
+  "scale_x": 0.006696428571428571,
+  "means": [
+    [
+      326.0,
+      374.0
+    ]
+  ],
+  "stdev": [
+    [
+      145.29922485351562,
+      151.95480346679688
+    ]
+  ],
+  "norm_const": 0.4,
+  "image_size": 896,
+  "patch_size": 16,
+  "num_patch": 56,
+  "exact_width": 896,
+  "nvars": 2,
+  "pad_down": 0,
+  "pad_right_img": 0,
+  "color_list": [
+    0,
+    1
+  ],
+  "image_size_per_var": 448,
+  "padding_mode": "replicate",
+  "align_const": 1.0,
+  "color_mode": true,
+  "mask_mode": "contiguous",
+  "mask_ratio": 0.5,
+  "mask_prob": 1.0,
+  "mask_ratio_actual": 0.3333333333333333,
+  "mask_value": -1.0,
+  "mask_ranges": [
+    [
+      576,
+      1152
+    ],
+    [
+      864,
+      1440
+    ]
+  ],
+  "mask_applied": true,
+  "mask_ratio_range": [
+    0.05,
+    0.5
+  ],
+  "mask_ratio_per_var": [
+    0.29269075331734495,
+    0.29839365661060924
+  ]
+}
