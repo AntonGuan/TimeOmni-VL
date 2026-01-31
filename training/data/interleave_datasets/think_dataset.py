@@ -94,58 +94,15 @@ class ThinkingGenerationIterableDataset(DistributedIterableDataset):
 
     def _add_image_for_understanding(self, data, image):
 
-        data['sequence_plan'].append({
-            'type': 'vae_image', 
-            'enable_cfg': 1, 
-            'loss': 0,
-            'special_token_loss': 0,
-            'special_token_label': None,
-        })
-        image_tensor = self.transform(image)
-        height, width = image_tensor.shape[1:]
-        data['num_tokens'] += width * height // self.transform.stride ** 2
-        data['image_tensor_list'].append(image_tensor)
-        
-        data['sequence_plan'].append({
-            'type': 'vit_image',
-            'enable_cfg': 1, 
-            'loss': 0,
-            'special_token_loss': 0,
-            'special_token_label': None,
-        })
-        vit_image_tensor = self.vit_transform(image)
-        height, width = vit_image_tensor.shape[1:]
-        data['num_tokens'] += width * height // self.vit_transform.stride ** 2
-        data['image_tensor_list'].append(vit_image_tensor)
+        # We only provide demo-level code at this stage. 
+        # The complete implementation will be released upon paper acceptance.
         
         return data
 
     def _add_image_for_generation(self, data, image, is_intermediate=False):
 
-        data['sequence_plan'].append({
-            'type': 'vae_image', 
-            'enable_cfg': 0, 
-            'loss': 1,  
-            'special_token_loss': 0,
-            'special_token_label': None,
-        })
-        image_tensor = self.transform(image)
-        height, width = image_tensor.shape[1:]
-        data['num_tokens'] += width * height // self.transform.stride ** 2
-        data['image_tensor_list'].append(image_tensor)
-        
-        if is_intermediate:
-            data['sequence_plan'].append({
-                'type': 'vit_image',
-                'enable_cfg': 1, 
-                'loss': 0,
-                'special_token_loss': 0,
-                'special_token_label': None,
-            })
-            vit_image_tensor = self.vit_transform(image)
-            height, width = vit_image_tensor.shape[1:]
-            data['num_tokens'] += width * height // self.vit_transform.stride ** 2
-            data['image_tensor_list'].append(vit_image_tensor)
+        # We only provide demo-level code at this stage. 
+        # The complete implementation will be released upon paper acceptance.
         
         return data
 

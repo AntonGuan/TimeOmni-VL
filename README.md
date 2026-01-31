@@ -1,8 +1,6 @@
-<div align="center">
-<img src="figs/logo.png" alt="Overview" width="120"/>
 
 <h1><b>
-TimeOmni-VL: Unified Models for Time Series Understanding and Generation
+📈 TimeOmni-VL: Unified Models for Time Series Understanding and Generation
 </b></h1>
 
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
@@ -82,6 +80,40 @@ pip install -r requirements.txt
 2. How to fine-tune the base model on time series data? Run the script at [train.sh](training/scripts/train.sh).
 
 ---
+
+## 🤔 Inference
+
+We provide flexible inference interfaces that support both time series understanding and generation tasks.
+
+🚀 **Usage:**
+
+1. **Batch parallel inference script** ([inference_parallel](inference/inference_parallel.py)):
+
+📈 **Demos:**
+
+We also provide a user-friendly interface for interacting with the model. Below are demo runs for Understanding and Generation tasks (Forecasting and Imputation):
+
+* **Understanding Task Demo**:
+
+<div align="center">
+<img src="demos/understanding.png" width="100%"/>
+</div>
+
+* **Generation Task 1: Forecasting Demo**:
+
+<div align="center">
+<img src="demos/forecasting.png" width="100%"/>
+</div>
+
+* **Generation Task 2: Imputation Demo**:
+
+<div align="center">
+<img src="demos/imputation.png" width="100%"/>
+</div>
+
+
+---
+
 
 ## 📦 Data Access
 ***To facilitate review and functional verification, we currently provide demo-level code and demo-level samples for functional verification at this stage. The complete implementation and full-scale datasets will be released upon paper acceptance.***
