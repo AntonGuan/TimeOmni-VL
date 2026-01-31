@@ -87,11 +87,12 @@ We provide flexible inference interfaces that support both time series understan
 
 🚀 **Usage:**
 
-1. **Batch parallel inference script** ([inference_parallel](inference/inference_parallel.py)):
+1. How to run parallel inference? Use the script [inference_parallel](inference/inference_parallel.py).
+
 
 📈 **Demos:**
 
-We also provide a user-friendly interface for interacting with the model. Below are demo runs for Understanding and Generation tasks (Forecasting and Imputation):
+We also provide an interactive interface for the model. Below we showcase demos for Understanding and Generation tasks, with Generation covering Forecasting and Imputation.
 
 * **Understanding Task Demo**:
 
