@@ -111,10 +111,3 @@ We also provide an interactive interface for the model. Below we showcase demos 
 <div align="center">
 <img src="demos/imputation.png" width="100%"/>
 </div>
-
-
----
-
-
-## 📦 Data Access
-***To facilitate review and functional verification, we currently provide demo-level code and demo-level samples for functional verification at this stage. The complete implementation and full-scale datasets will be released upon paper acceptance.***
