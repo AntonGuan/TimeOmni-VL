@@ -1,3 +1,5 @@
+# Copyright 2024 The HuggingFace Inc. team.
+# SPDX-License-Identifier: Apache-2.0
 
 """PyTorch Siglip model."""
 
@@ -43,6 +45,7 @@ _CHECKPOINT_FOR_DOC = "google/siglip-base-patch16-224"
 
 def _trunc_normal_(tensor, mean, std, a, b):
     # Cut & paste from PyTorch official master until it's in a few official releases - RW
+    # Method based on https://people.sc.fsu.edu/~jburkardt/presentations/truncated_normal.pdf
     def norm_cdf(x):
         # Computes standard normal cumulative distribution function
         return (1.0 + math.erf(x / math.sqrt(2.0))) / 2.0

@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import copy
 import json
-import math
 import os
 import random
 import multiprocessing as mp
@@ -23,10 +22,27 @@ from accelerate.utils import BnbQuantizationConfig, load_and_quantize_model
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+EVAL_ROOT = Path(__file__).resolve().parent
+if str(EVAL_ROOT) not in sys.path:
+    sys.path.insert(0, str(EVAL_ROOT))
+METRICS_ROOT = REPO_ROOT / "metrics"
+if str(METRICS_ROOT) not in sys.path:
+    sys.path.insert(0, str(METRICS_ROOT))
+TRAINING_ROOT = REPO_ROOT / "training"
+if str(TRAINING_ROOT) not in sys.path:
+    sys.path.insert(0, str(TRAINING_ROOT))
 
 from training.data.data_utils import add_special_tokens, pil_img2rgb
 from training.data.transforms import ImageTransform
 from inferencer import InterleaveInferencer
+from evaluate_forecast_edits_mase import (
+    EvalItem as ForecastEvalItem,
+    _evaluate_item as _evaluate_forecast_item,
+)
+from evaluate_imputation_edits_mase import (
+    EvalItem as ImputationEvalItem,
+    _evaluate_item as _evaluate_imputation_item,
+)
 from training.modeling.autoencoder import load_ae
 from training.modeling.bagel import (
     BagelConfig,
@@ -55,7 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--output-root",
-        default=str(REPO_ROOT / "inference/outputs/model_edits"),
+        default=str(REPO_ROOT / "eval/outputs/model_edits"),
     )
     parser.add_argument("--output-name", default="edit.png")
     parser.add_argument(
@@ -276,23 +292,119 @@ def load_jsonl(jsonl_path: Path) -> List[Dict[str, str]]:
     return rows
 
 
-def _image_to_array(img: Image.Image) -> np.ndarray:
-    arr = np.asarray(img).astype(np.float32)
-    if arr.ndim == 2:
-        arr = np.stack([arr] * 3, axis=-1)
-    return arr
+def _resolve_input_path(path: Path, input_root: Path) -> Path:
+    if path.is_absolute():
+        return path
+    for candidate in (Path.cwd() / path, input_root / path, REPO_ROOT / path):
+        if candidate.exists():
+            return candidate
+    return input_root / path
 
 
-def _compute_metrics(pred: Image.Image, target: Image.Image) -> Dict[str, float]:
-    if pred.size != target.size:
-        target = target.resize(pred.size, resample=Image.BILINEAR)
-    pred_arr = _image_to_array(pred)
-    target_arr = _image_to_array(target)
-    diff = pred_arr - target_arr
-    mae = float(np.mean(np.abs(diff)))
-    mse = float(np.mean(diff ** 2))
-    psnr = float("inf") if mse == 0 else 20 * math.log10(255.0 / math.sqrt(mse))
-    return {"mae": mae, "mse": mse, "psnr": psnr}
+def _metadata_from_record(record: Dict[str, str], source_image: Path, input_root: Path) -> Optional[Path]:
+    metadata_value = record.get("metadata")
+    if metadata_value:
+        metadata_path = _resolve_input_path(Path(metadata_value), input_root)
+        if metadata_path.exists():
+            return metadata_path
+
+    candidate = source_image.parent / "metadata.json"
+    if candidate.exists():
+        return candidate
+    return None
+
+
+def _aggregate_mase(detail_rows: List[Dict[str, object]]) -> Dict[str, object]:
+    mae_rows = [
+        row
+        for row in detail_rows
+        if pd.notna(row.get("sum_abs_error")) and int(row.get("valid_count") or 0) > 0
+    ]
+    mase_rows = [
+        row
+        for row in detail_rows
+        if pd.notna(row.get("sum_scaled_abs_error"))
+        and int(row.get("mase_valid_count") or row.get("valid_count") or 0) > 0
+    ]
+    if not mae_rows and not mase_rows:
+        return {
+            "mae": np.nan,
+            "season_naive_mae": np.nan,
+            "mase": np.nan,
+        }
+
+    sum_abs_error = sum(float(row["sum_abs_error"]) for row in mae_rows)
+    valid_count = sum(int(row["valid_count"]) for row in mae_rows)
+    sum_mase_abs_error = sum(
+        float(row.get("sum_mase_abs_error", row["sum_abs_error"])) for row in mase_rows
+    )
+    sum_scaled_error = sum(float(row["sum_scaled_abs_error"]) for row in mase_rows)
+    mase_valid_count = sum(int(row.get("mase_valid_count") or row.get("valid_count") or 0) for row in mase_rows)
+    weighted_mae = float(sum_abs_error / valid_count) if valid_count else np.nan
+
+    return {
+        "mae": weighted_mae,
+        "season_naive_mae": (
+            float(sum_mase_abs_error / sum_scaled_error)
+            if sum_scaled_error and not np.isclose(sum_scaled_error, 0.0)
+            else np.nan
+        ),
+        "mase": float(sum_scaled_error / mase_valid_count) if mase_valid_count else np.nan,
+    }
+
+
+def _is_imputation_metadata(metadata: Dict[str, object]) -> bool:
+    return str(metadata.get("mode", "")).lower() == "imputation" or "mask_ranges" in metadata
+
+
+def _compute_mase_metrics(
+    output_image: Path,
+    source_image: Path,
+    record: Dict[str, str],
+    input_root: Path,
+) -> Dict[str, object]:
+    metadata = _metadata_from_record(record, source_image, input_root)
+    if metadata is None:
+        return {
+            "mae": np.nan,
+            "season_naive_mae": np.nan,
+            "mase": np.nan,
+        }
+
+    try:
+        metadata_dict = json.loads(metadata.read_text(encoding="utf-8"))
+        series = metadata.with_name("series.npz")
+        if _is_imputation_metadata(metadata_dict):
+            target_image = _resolve_input_path(Path(record["target_image"]), input_root) if record.get("target_image") else None
+            item = ImputationEvalItem(
+                output_image=output_image,
+                source_image=source_image,
+                target_image=target_image,
+                metadata=metadata,
+                series=series,
+                instruction=str(record.get("instruction", "")),
+                thinking=str(record.get("thinking", "")),
+            )
+            detail_rows = _evaluate_imputation_item(item, input_root)
+        else:
+            item = ForecastEvalItem(
+                output_image=output_image,
+                source_image=source_image,
+                metadata=metadata,
+                series=series,
+                instruction=str(record.get("instruction", "")),
+                thinking=str(record.get("thinking", "")),
+            )
+            detail_rows = _evaluate_forecast_item(item, input_root)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[warn] MASE unavailable for {output_image}: {exc}")
+        return {
+            "mae": np.nan,
+            "season_naive_mae": np.nan,
+            "mase": np.nan,
+        }
+
+    return _aggregate_mase(detail_rows)
 
 
 def run_inference(
@@ -310,8 +422,10 @@ def run_inference(
 
     metrics_rows: List[Dict[str, object]] = []
     for idx, record in enumerate(records, start=1):
-        src_path = Path(record["source_image"])
-        tgt_path = Path(record["target_image"])
+        src_ref = Path(record["source_image"])
+        tgt_ref = Path(record["target_image"])
+        src_path = _resolve_input_path(src_ref, input_root)
+        tgt_path = _resolve_input_path(tgt_ref, input_root)
         instruction = record["instruction"]
 
         image = pil_img2rgb(Image.open(src_path))
@@ -342,14 +456,17 @@ def run_inference(
         out_path = out_dir / args.output_name
         out.save(out_path)
 
-        metrics = {}
-        if tgt_path.exists():
-            metrics = _compute_metrics(out, Image.open(tgt_path))
+        metrics = _compute_mase_metrics(
+            output_image=out_path,
+            source_image=src_path,
+            record=record,
+            input_root=input_root,
+        )
         metrics_rows.append(
             {
                 "index": idx,
-                "source_image": str(src_path),
-                "target_image": str(tgt_path),
+                "source_image": str(src_ref),
+                "target_image": str(tgt_ref),
                 "output_image": str(out_path),
                 "instruction": instruction,
                 "thinking": thinking_text,

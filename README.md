@@ -1,113 +1,264 @@
+<div align="center">
+<img src="figs/logo.png" alt="TimeOmni-VL Logo" width="120"/>
 
 <h1><b>
-📈 TimeOmni-VL: Unified Models for Time Series Understanding and Generation
+TimeOmni-VL: Unified Models for Time Series Understanding and Generation
 </b></h1>
 
-[![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/)
-[![Contributions](https://img.shields.io/badge/contributions-welcome-orange.svg)]()
+<p align="left">
+  <a href="https://huggingface.co/TimeOmni-VL/TimeOmni-VL">
+    <img
+      src="https://img.shields.io/badge/TimeOmni--VL-Model-yellow?logo=huggingface&logoColor=white"
+      style="display: inline-block; vertical-align: middle;"
+      alt="TimeOmni-VL Model on Hugging Face"
+    />
+  </a>
+  <a href="https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train">
+    <img
+      src="https://img.shields.io/badge/TSUMM--Suite-Dataset-orange?logo=huggingface&logoColor=white"
+      style="display: inline-block; vertical-align: middle;"
+      alt="TSUMM-Suite Dataset on Hugging Face"
+    />
+  </a>
+  <a href="https://huggingface.co/spaces/TimeOmni-VL/TimeOmni-VL">
+    <img
+      src="https://img.shields.io/badge/TimeOmni--VL-Demo-blue?logo=huggingface&logoColor=white"
+      style="display: inline-block; vertical-align: middle;"
+      alt="TimeOmni-VL Demo on Hugging Face Spaces"
+    />
+  </a>
+  <a href="https://github.com/AntonGuan/TimeOmni-VL">
+    <img
+      src="https://img.shields.io/badge/TimeOmni--VL-GitHub-black?logo=github&logoColor=white"
+      style="display: inline-block; vertical-align: middle;"
+      alt="TimeOmni-VL GitHub Repository"
+    />
+  </a>
+</p>
 
 </div>
 
-***This repository provides two core components for unified time series multimodal models***:
+**This repository provides model weights, TSUMM-Suite data utilities, training and inference scripts, and evaluation tools for TimeOmni-VL.**
 
-1. **🧱 TSUMM-Suite (Time Series Unified Multimodal Suite)**: A data pipeline that spans time series understanding and generation.
-2. **🤖 TimeOmni-VL (Time Series Unified Multimodal Model)**: A vision-centric framework that unifies time series understanding and generation.
+
+TimeOmni-VL is a vision-centric time-series multimodal model. It represents time series as structured images and supports both time-series understanding and time-series generation in a unified framework.
 
 ---
+
+## 🚩 Updates/News
+
+🚩 **News** (May 2026): We release the TimeOmni-VL checkpoint and TSUMM-Suite training samples on Hugging Face: [TimeOmni-VL](https://huggingface.co/TimeOmni-VL/TimeOmni-VL) and [TSUMM_SUITE_Train](https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train).
+
+🚩 **News** (May 2026): TimeOmni-VL has been accepted to ICML 2026.
+
+## 🔎 Overview
+
+<div align="center">
+<img src="figs/method.png" width="100%"/>
+</div>
+
+TimeOmni-VL contains two main components:
+
+1. **TSUMM-Suite**: A data pipeline covering time-series understanding and generation tasks.
+2. **TimeOmni-VL**: A unified vision-language generation model trained on time-series images, text instructions, and reasoning data.
+
+## 🛠️ Environment Setup
+
+```bash
+# Create a new conda environment
+conda create -n timeomni_vl python=3.10
+conda activate timeomni_vl
+
+# Install TimeOmni-VL dependencies.
+pip install -r training/requirements.txt
+```
+FlashAttention installation:
+
+```bash
+# Download the FlashAttention wheel
+wget https://github.com/Dao-AILab/flash-attention/releases/download/v2.5.8/flash_attn-2.5.8+cu122torch2.3cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+
+# Install FlashAttention
+pip install flash_attn-2.5.8+cu122torch2.3cxx11abiFALSE-cp310-cp310-linux_x86_64.whl
+```
 
 ## 🧱 TSUMM-Suite
 
-TSUMM-Suite comprises six time series understanding tasks and two time series generation tasks, including:
+TSUMM-Suite includes understanding, generation, and reasoning data.
 
-* **Understanding Tasks**:
-  1. Variable Counting
-  2. Variable Y-Range
-  3. Cycle Bounding Box
-  4. Mean Comparison
-  5. Anomaly Detection
-  6. Trend Analysis
+**Understanding tasks**
 
-* **Generation Tasks**:
-  1. Multivariate zero-shot time series forecasting
-  2. Multivariate zero-shot time series imputation
+- Variable counting
+- Variable Y-range identification
+- Cycle bounding box localization
+- Mean comparison
+- Anomaly detection
+- Trend analysis
 
+**Generation tasks**
 
-📚 **Task illustration**:
+- Multivariate zero-shot time-series forecasting
+- Multivariate zero-shot time-series imputation
+
+**Reasoning tasks**
+
+- Text-only time-series reasoning samples that complement the vision-centric tasks.
+
 <div align="center">
-<img src="figs/fig4.png" width="100%"/>
+<img src="figs/task.png" width="100%"/>
 </div>
 
+### 🧪 Training Data
 
-Since TimeOmni-VL is a vision-centric framework, we introduce a fidelity-preserving bidirectional mapping between time series and images (***Bi-TSI***), and build the data pipeline on top of Bi-TSI.
+The TSUMM-Suite training samples are available at [TSUMM_SUITE_Train](https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train).
 
 
+### 🧬 Evaluation Data
 
-🚀 **Usage**:
-1. How to construct datasets for both Understanding and Generation tasks? Run the [demo](data_pipeline/bi_tsi/demo.ipynb) to see the dataset build process.
+Before generating evaluation samples, download the [GiftEval data](https://huggingface.co/datasets/Salesforce/GiftEval) into `data_pipeline/GiftEval`, then install the [Gift-Eval Requirements](https://github.com/SalesforceAIResearch/gift-eval):
 
-2. How to implement the fidelity-preserving bidirectional mapping between time series and images (Bi-TSI)? We provide an Understanding adapter at [understanding_adapter](data_pipeline/bi_tsi/understanding_adapter.py), and Generation adapters at [forecasting_adapter](data_pipeline/bi_tsi/forecasting_adapter.py) (Forecasting) and [imputation_adapter](data_pipeline/bi_tsi/imputation_adapter.py) (Imputation).
+```bash
+git clone https://github.com/SalesforceAIResearch/gift-eval.git && cd gift-eval && pip install -e .
+```
 
-3. What is the training data format required by TimeOmni-VL? Refer to [sample_understanding](data_pipeline/demo_level_samples/understanding_sample.jsonl) for Understanding, and [sample_forecasting](data_pipeline/demo_level_samples/forecast_samples_thinking_gen.jsonl) (Forecasting) plus [sample_imputation](data_pipeline/demo_level_samples/imputation_samples_thinking_gen.jsonl) (Imputation) for Generation.
+The following commands demonstrate how to generate 10 evaluation samples.
 
----
+Generate forecasting evaluation samples:
+
+```bash
+python data_pipeline/gen_test_data/gen_gifteval_forecasting_test.py \
+  --output-root data_pipeline/forecast_benchmark_samples \
+  --term short medium long \
+  --max-total-samples 10
+```
+
+Generate imputation evaluation samples:
+
+```bash
+python data_pipeline/gen_test_data/gen_gifteval_imputation_test.py \
+  --output-root data_pipeline/imputation_benchmark_samples \
+  --term short medium long \
+  --max-total-samples 10
+```
 
 ## 🤖 TimeOmni-VL
 
-TimeOmni-VL employs a joint training strategy to support both TS-image-based time series understanding and generation, and is also compatible with text-only time series reasoning training data.
+TimeOmni-VL is a unified vision-language generation model trained on time-series images, text instructions, and reasoning data. It supports time-series forecasting, imputation, visual understanding, and text reasoning through a shared multimodal interface.
 
-📏 **Loss Functions**:
+### 📦 Model Download
 
-  1. **Understanding Loss**: Next-token prediction loss over the chain-of-thought and final answer.
-  2. **Generation Loss**: Diffusion denoising loss for generating target TS-images.
-
-
-🛠️ **Installation:**
-```bash
-# 1. Create environment
-conda create -n timeomni_vl python==3.10
-conda activate timeomni_vl
-```
+Create a local checkpoint folder and place the downloaded model under it:
 
 ```bash
-# 2. Install dependencies
-cd training
-pip install -r requirements.txt
+mkdir -p checkpoint
 ```
 
-🚀 **Usage:**
-
-1. How to set the dataset configuration parameters? See the dataset config at [config.yaml](training/data/configs/example.yaml).
-2. How to fine-tune the base model on time series data? Run the script at [train.sh](training/scripts/train.sh).
-
----
-
-## 🤔 Inference
-
-We provide flexible inference interfaces that support both time series understanding and generation tasks.
-
-🚀 **Usage:**
-
-1. How to run parallel inference? Use the script [inference_parallel](inference/inference_parallel.py).
+Download the TimeOmni-VL checkpoint from [TimeOmni-VL](https://huggingface.co/TimeOmni-VL/TimeOmni-VL).
 
 
-📈 **Demos:**
+### 🚀 Inference
 
-We also provide an interactive interface for the model. Below we showcase demos for Understanding and Generation tasks, with Generation covering Forecasting and Imputation.
+Demo-level samples are already included in:
 
-* **Understanding Task Demo**:
+```text
+data_pipeline/demo_level_samples/
+```
+
+
+#### 📈 Forecasting
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python eval/generation_inference.py \
+  --base_model checkpoint/TimeOmni-VL \
+  --jsonl data_pipeline/demo_level_samples/forecast_samples_thinking_gen.jsonl \
+  --input-root data_pipeline/demo_level_samples \
+  --output-root eval/outputs/forecasting_demo \
+  --output-name edit.png \
+  --metrics-csv eval/outputs/forecasting_demo/metrics.csv \
+  --device-ids 0 \
+  --no-shuffle
+```
+
+
+#### 🧩 Imputation
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python eval/generation_inference.py \
+  --base_model checkpoint/TimeOmni-VL \
+  --jsonl data_pipeline/demo_level_samples/imputation_samples_thinking_gen.jsonl \
+  --input-root data_pipeline/demo_level_samples \
+  --output-root eval/outputs/imputation_demo \
+  --output-name edit.png \
+  --metrics-csv eval/outputs/imputation_demo/metrics.csv \
+  --device-ids 0 \
+  --no-shuffle
+```
+
+#### 👁️ Understanding
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python eval/understanding_inference.py \
+  --base_model checkpoint/TimeOmni-VL \
+  --image data_pipeline/demo_level_samples/sample_understanding/image_full.png \
+  --qa-json data_pipeline/demo_level_samples/sample_understanding/qa_pairs.json \
+  --qa-index 0 \
+  --output-root eval/outputs/understanding_demo \
+  --device-ids 0
+```
+
+To enable explicit thinking output:
+
+```bash
+--think
+```
+
+### 🏋️ Training
+
+Dataset configuration:
+
+```text
+training/data/configs/example.yaml
+```
+
+Training entry:
+
+```bash
+bash training/scripts/train.sh
+```
+
+Before launching training, update the machine-specific paths, distributed settings, dataset paths, and GPU count in the config and script.
+
+## 🖼️ Demos
+
+**Understanding**
 
 <div align="center">
 <img src="demos/understanding.png" width="100%"/>
 </div>
 
-* **Generation Task 1: Forecasting Demo**:
+**Forecasting**
 
 <div align="center">
 <img src="demos/forecasting.png" width="100%"/>
 </div>
 
-* **Generation Task 2: Imputation Demo**:
+**Imputation**
 
 <div align="center">
 <img src="demos/imputation.png" width="100%"/>
 </div>
+<<<<<<< HEAD
+=======
+
+
+## ✍️ Citation
+
+```bibtex
+@article{guan2026timeomni,
+  title={TimeOmni-VL: Unified Models for Time Series Understanding and Generation},
+  author={Guan, Tong and Pan, Sheng and Barthelemy, Johan and Li, Zhao and Cai, Yujun and Alippi, Cesare and Jin, Ming and Pan, Shirui},
+  journal={arXiv preprint arXiv:2602.17149},
+  year={2026}
+}
+```
+>>>>>>> 9ff9b38 (initial release)
