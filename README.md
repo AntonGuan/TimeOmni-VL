@@ -247,8 +247,6 @@ Before launching training, update the machine-specific paths, distributed settin
 <div align="center">
 <img src="demos/imputation.png" width="100%"/>
 </div>
-<<<<<<< HEAD
-=======
 
 
 ## ✍️ Citation
@@ -261,4 +259,3 @@ Before launching training, update the machine-specific paths, distributed settin
   year={2026}
 }
 ```
->>>>>>> 9ff9b38 (initial release)
