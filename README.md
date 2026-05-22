@@ -5,35 +5,12 @@
 TimeOmni-VL: Unified Models for Time Series Understanding and Generation
 </b></h1>
 
-<p align="left">
-  <a href="https://huggingface.co/TimeOmni-VL/TimeOmni-VL">
-    <img
-      src="https://img.shields.io/badge/TimeOmni--VL-Model-yellow?logo=huggingface&logoColor=white"
-      style="display: inline-block; vertical-align: middle;"
-      alt="TimeOmni-VL Model on Hugging Face"
-    />
-  </a>
-  <a href="https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train">
-    <img
-      src="https://img.shields.io/badge/TSUMM--Suite-Dataset-orange?logo=huggingface&logoColor=white"
-      style="display: inline-block; vertical-align: middle;"
-      alt="TSUMM-Suite Dataset on Hugging Face"
-    />
-  </a>
-  <a href="https://huggingface.co/spaces/TimeOmni-VL/TimeOmni-VL">
-    <img
-      src="https://img.shields.io/badge/TimeOmni--VL-Demo-blue?logo=huggingface&logoColor=white"
-      style="display: inline-block; vertical-align: middle;"
-      alt="TimeOmni-VL Demo on Hugging Face Spaces"
-    />
-  </a>
-  <a href="https://github.com/AntonGuan/TimeOmni-VL">
-    <img
-      src="https://img.shields.io/badge/TimeOmni--VL-GitHub-black?logo=github&logoColor=white"
-      style="display: inline-block; vertical-align: middle;"
-      alt="TimeOmni-VL GitHub Repository"
-    />
-  </a>
+<p align="center">
+  <a href="https://arxiv.org/abs/2602.17149"><img src="https://img.shields.io/badge/TimeOmni--VL-Paper-red?logo=arxiv&logoColor=red" alt="TimeOmni-VL Paper on arXiv"></a>
+  <a href="https://huggingface.co/TimeOmni-VL/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Model-yellow?logo=huggingface&logoColor=white" alt="TimeOmni-VL Model on Hugging Face"></a>
+  <a href="https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train"><img src="https://img.shields.io/badge/TSUMM--SUITE-Dataset-orange?logo=huggingface&logoColor=white" alt="TSUMM-SUITE Dataset on Hugging Face"></a>
+  <a href="https://huggingface.co/spaces/anton-hugging/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Demo-blue?logo=huggingface&logoColor=white" alt="TimeOmni-VL Demo on Hugging Face Spaces"></a>
+  <a href="https://github.com/AntonGuan/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Code-536af5?logo=github&logoColor=white" alt="TimeOmni-VL Code on GitHub"></a>
 </p>
 
 </div>
