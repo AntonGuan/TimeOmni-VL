@@ -8,7 +8,7 @@ TimeOmni-VL: Unified Models for Time Series Understanding and Generation
 <p align="center">
   <a href="https://arxiv.org/abs/2602.17149"><img src="https://img.shields.io/badge/TimeOmni--VL-Paper-red?logo=arxiv&logoColor=red" alt="TimeOmni-VL Paper on arXiv"></a>
   <a href="https://huggingface.co/TimeOmni-VL/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Model-yellow?logo=huggingface&logoColor=white" alt="TimeOmni-VL Model on Hugging Face"></a>
-  <a href="https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train"><img src="https://img.shields.io/badge/TSUMM--SUITE-Dataset-orange?logo=huggingface&logoColor=white" alt="TSUMM-SUITE Dataset on Hugging Face"></a>
+  <a href="https://huggingface.co/datasets/TimeOmni-VL/TSUMM-Suite_Training"><img src="https://img.shields.io/badge/TSUMM--Suite-Dataset-orange?logo=huggingface&logoColor=white" alt="TSUMM-Suite Dataset on Hugging Face"></a>
   <a href="https://huggingface.co/spaces/anton-hugging/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Demo-blue?logo=huggingface&logoColor=white" alt="TimeOmni-VL Demo on Hugging Face Spaces"></a>
   <a href="https://github.com/AntonGuan/TimeOmni-VL"><img src="https://img.shields.io/badge/TimeOmni--VL-Code-536af5?logo=github&logoColor=white" alt="TimeOmni-VL Code on GitHub"></a>
 </p>
@@ -24,7 +24,7 @@ TimeOmni-VL is a vision-centric time-series multimodal model. It represents time
 
 ## 🚩 Updates/News
 
-🚩 **News** (May 2026): We release the TimeOmni-VL checkpoint and TSUMM-Suite training samples on Hugging Face: [TimeOmni-VL](https://huggingface.co/TimeOmni-VL/TimeOmni-VL) and [TSUMM_SUITE_Train](https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train).
+🚩 **News** (May 2026): We release the TimeOmni-VL checkpoint and TSUMM-Suite generation training samples on Hugging Face: [TimeOmni-VL](https://huggingface.co/TimeOmni-VL/TimeOmni-VL) and [TSUMM-Suite_Training](https://huggingface.co/datasets/TimeOmni-VL/TSUMM-Suite_Training).
 
 🚩 **News** (May 2026): TimeOmni-VL has been accepted to ICML 2026.
 
@@ -36,8 +36,8 @@ TimeOmni-VL is a vision-centric time-series multimodal model. It represents time
 
 TimeOmni-VL contains two main components:
 
-1. **TSUMM-Suite**: A data pipeline covering time-series understanding and generation tasks.
-2. **TimeOmni-VL**: A unified vision-language generation model trained on time-series images, text instructions, and reasoning data.
+1. **TSUMM-Suite**: A data pipeline covering time series understanding and generation tasks.
+2. **TimeOmni-VL**: A unified vision-language generation model trained on time series images, text instructions, and reasoning data.
 
 ## 🛠️ Environment Setup
 
@@ -66,7 +66,7 @@ TSUMM-Suite includes understanding, generation, and reasoning data.
 **Understanding tasks**
 
 - Variable counting
-- Variable Y-range identification
+- Variable Y-Range identification
 - Cycle bounding box localization
 - Mean comparison
 - Anomaly detection
@@ -74,12 +74,12 @@ TSUMM-Suite includes understanding, generation, and reasoning data.
 
 **Generation tasks**
 
-- Multivariate zero-shot time-series forecasting
-- Multivariate zero-shot time-series imputation
+- Multivariate time series forecasting
+- Multivariate time series imputation
 
 **Reasoning tasks**
 
-- Text-only time-series reasoning samples that complement the vision-centric tasks.
+- Text-only time series reasoning samples that complement the vision-centric tasks.
 
 <div align="center">
 <img src="figs/task.png" width="100%"/>
@@ -87,12 +87,12 @@ TSUMM-Suite includes understanding, generation, and reasoning data.
 
 ### 🧪 Training Data
 
-The TSUMM-Suite training samples are available at [TSUMM_SUITE_Train](https://huggingface.co/datasets/TimeOmni-VL/TSUMM_SUITE_Train).
+The TSUMM-Suite generation training samples (80k forecasting + imputation samples) are available at [TSUMM-Suite_Training](https://huggingface.co/datasets/TimeOmni-VL/TSUMM-Suite_Training). In the paper, the main experiments use **5k samples per generation task** for training; the remaining samples are released for community exploration.
 
 
 ### 🧬 Evaluation Data
 
-Before generating evaluation samples, download the [GiftEval data](https://huggingface.co/datasets/Salesforce/GiftEval) into `data_pipeline/GiftEval`, then install the [Gift-Eval Requirements](https://github.com/SalesforceAIResearch/gift-eval):
+Before generating evaluation samples, download the [GIFT-Eval data](https://huggingface.co/datasets/Salesforce/GiftEval) into `data_pipeline/GiftEval`, then install the [GIFT-Eval requirements](https://github.com/SalesforceAIResearch/gift-eval):
 
 ```bash
 git clone https://github.com/SalesforceAIResearch/gift-eval.git && cd gift-eval && pip install -e .
@@ -120,7 +120,7 @@ python data_pipeline/gen_test_data/gen_gifteval_imputation_test.py \
 
 ## 🤖 TimeOmni-VL
 
-TimeOmni-VL is a unified vision-language generation model trained on time-series images, text instructions, and reasoning data. It supports time-series forecasting, imputation, visual understanding, and text reasoning through a shared multimodal interface.
+TimeOmni-VL is a unified vision-language generation model trained on time series images, text instructions, and reasoning data. It supports time series forecasting, imputation, visual understanding, and text reasoning through a shared multimodal interface.
 
 ### 📦 Model Download
 
@@ -183,11 +183,7 @@ CUDA_VISIBLE_DEVICES=0 python eval/understanding_inference.py \
   --device-ids 0
 ```
 
-To enable explicit thinking output:
-
-```bash
---think
-```
+Add `--think` to enable explicit thinking output.
 
 ### 🏋️ Training
 
