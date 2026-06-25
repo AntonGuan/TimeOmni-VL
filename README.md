@@ -209,7 +209,7 @@ bash training/scripts/train.sh
 
 Before launching training, update the machine-specific paths, distributed settings, dataset paths, and GPU count in the config and script.
 
-## 🖼️ Demos
+## 🖼️ Task Examples
 
 **Understanding**
 
