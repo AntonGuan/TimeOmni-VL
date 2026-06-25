@@ -20,9 +20,17 @@ TimeOmni-VL: Unified Models for Time Series Understanding and Generation
 
 TimeOmni-VL is a vision-centric time-series multimodal model. It represents time series as structured images and supports both time-series understanding and time-series generation in a unified framework.
 
+## 🎬 Demo Video
+
+[![TimeOmni-VL demo teaser](assets/demo_teaser.gif)](https://github.com/AntonGuan/TimeOmni-VL/blob/main/assets/02_TimeOmni-VL_Tasks_showcase.mp4)
+
+▶️ Click the teaser to watch the **[full demo video](https://github.com/AntonGuan/TimeOmni-VL/blob/main/assets/02_TimeOmni-VL_Tasks_showcase.mp4)**. It walks through TimeOmni-VL across all of its abilities: image-based **understanding** (variable counting, Y-range, cycle localization, mean comparison, anomaly detection, trend analysis), **generation** (forecasting and imputation by painting the image), and text-only **reasoning**.
+
 ---
 
 ## 🚩 Updates/News
+
+🚩 **News** (Jun. 2026): We have added a [demo video](#-demo-video) showing how TimeOmni-VL works.
 
 🚩 **News** (May 2026): We release the TimeOmni-VL checkpoint and TSUMM-Suite generation training samples on Hugging Face: [TimeOmni-VL](https://huggingface.co/TimeOmni-VL/TimeOmni-VL) and [TSUMM-Suite_Training](https://huggingface.co/datasets/TimeOmni-VL/TSUMM-Suite_Training).
 
