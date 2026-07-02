@@ -233,10 +233,12 @@ Before launching training, update the machine-specific paths, distributed settin
 ## ✍️ Citation
 
 ```bibtex
-@article{guan2026timeomni,
-  title={TimeOmni-VL: Unified Models for Time Series Understanding and Generation},
-  author={Guan, Tong and Pan, Sheng and Barthelemy, Johan and Li, Zhao and Cai, Yujun and Alippi, Cesare and Jin, Ming and Pan, Shirui},
-  journal={arXiv preprint arXiv:2602.17149},
-  year={2026}
+@inproceedings{
+guan2026timeomnivl,
+title={TimeOmni-{VL}: Unified Models for Time Series Understanding and Generation},
+author={Tong Guan and Sheng Pan and Johan Barthelemy and Zhao Li and Yujun Cai and Cesare Alippi and Ming Jin and Shirui Pan},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=uUnIAtZUfX}
 }
 ```
